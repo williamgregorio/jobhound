@@ -29,5 +29,5 @@ Conclusion ::
 We will build a mock up to satisfy the anonymous users with basic react based library and some logic points 
 
 
-After::REST API will be built for further authentication and storage, email sequences, ...
+After::REST API will be built for further authentication and storage, email sequences, ....
 
