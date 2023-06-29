@@ -24,10 +24,15 @@ Graduates and Undergraduates can present education first
 else 
 Non graduates will present technical skills || experience (*Not literal as other components come first)
 
-..........................................................................................................................................................................................................
-Conclusion :: 
+............................................................................................................................................................................................Conclusion :: 
+
 We will build a mock up to satisfy the anonymous users with basic react based library and some logic points 
 
 
 After::REST API will be built for further authentication and storage, email sequences, ....
 
+
+Technology :
+Remix 
+
+Not worried about backend right now as the mock up is being built right now
