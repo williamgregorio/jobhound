@@ -20,3 +20,14 @@ https://hwpi.harvard.edu/files/ocs/files/undergrad_resumes_and_cover_letters.pdf
 
 As for each of these has a leverage in order to peek a higher percentage for interviews and potential hires
 
+Graduates and Undergraduates can present education first
+else 
+Non graduates will present technical skills || experience (*Not literal as other components come first)
+
+..........................................................................................................................................................................................................
+Conclusion :: 
+We will build a mock up to satisfy the anonymous users with basic react based library and some logic points 
+
+
+After::REST API will be built for further authentication and storage, email sequences, ...
+
