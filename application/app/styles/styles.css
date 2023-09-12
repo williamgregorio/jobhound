@@ -310,3 +310,13 @@ nav {
 .show {
     opacity: 1;
 }
+
+
+table {
+    border: 1px solid #181818;
+    margin: 5%;
+}
+
+td,th,tr {
+    border: 1px solid #181818;
+}

@@ -1,26 +1,29 @@
 import { Link } from "@remix-run/react";
 
 export default function ResumeList({ resumes }) {
-    return (
-      <>
-		<div className="tita-header"></div>
-        <div className="resume-cards">
+  return (
+    <>
+      <div className="header"></div>
+      <table>
+        <thead>
+          <tr>
+            <th>Resume ID</th>
+            <th>Resume Name</th>
+            <th>Company Name</th>
+          </tr>
+        </thead>
+        <tbody>
           {resumes.map((resume) => {
             return (
-              <Link
-                to={`${resume.resume_id}`}
-                className="resume-card"
-                key={resume.resume_id}
-              >
-                <h2>{resume.resume_name}</h2>
-                <span>Appliying for:</span>
-                <br></br>
-                <span>Date created:</span>
-              </Link>
+              <tr>
+                <td>{resume.resume_id}</td>
+                <td>{resume.resume_name}</td>
+              </tr>
             );
           })}
-        </div>
-      </>
-    );
-  }
-  
+        </tbody>
+      </table>
+    </>
+  );
+}
+

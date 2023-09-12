@@ -16,7 +16,7 @@ export default function Header() {
               <Link to="/create">Create Resume</Link>
             </li>
             <li>
-                <Link to="/contact">SignUp/Login</Link>
+                <Link to="/login">SignUp/Login</Link>
             </li>
           </ul>
         </div>
