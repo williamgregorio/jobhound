@@ -1,11 +1,10 @@
 from django.urls import path, include
-from rest_framework import routers
-from .views import ResumeViewSet, PersonalInformationViewSet
+from rest_framework.routers import DefaultRouter
+from .views import ResumeViewSet
 
-app_name = 'resumes'
 
-router = routers.DefaultRouter()
-router.register('resumes', ResumeViewSet, basename='resumes-list')
+router = DefaultRouter()
+router.register(r'resumes', ResumeViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),

@@ -1,11 +1,7 @@
 from rest_framework import viewsets
-from .models import PersonalInformation, Resume
-from .serializers import PersonalInformationSerializer, ResumeSerializer
+from .models import Resume
+from .serializers import ResumeSerializer
 
-class PersonalInformationViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = PersonalInformation.objects.all()
-    serializer_class = PersonalInformationSerializer
-
-class ResumeViewSet(viewsets.ReadOnlyModelViewSet):
+class ResumeViewSet(viewsets.ModelViewSet):
     queryset = Resume.objects.all()
     serializer_class = ResumeSerializer
