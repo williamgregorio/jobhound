@@ -1,38 +1,46 @@
-Quick Resume Generator
+# Resume Generator
 
-Goal >> Anonymous users checks on landing page of tool, for generation of new resume, if user wants to save information to let them create an account else ..
-Why> While there a new jobs everyday, a new job is a new business with different cultures and needs. While it may be the same position we understand tailoring and targeting that specific business/client
-will give you a higher percentage (*uncalculated*) of getting the deal/job
+## Description
 
-As you can see there is no direct targeting on who can benefit from this, it does seem like a person searching for a W-2 position may seek great results from this, so this will be the main agenda
+Create and manage fast, unique resumes tailored for each job you seek.
 
+## Features
 
-*Data research will come from 
-https://careerservices.fas.harvard.edu/
-https://hwpi.harvard.edu/files/ocs/files/hes-resume-cover-letter-guide.pdf
-https://hwpi.harvard.edu/files/ocs/files/undergrad_resumes_and_cover_letters.pdf
+### 1. Job Seek Accounting
 
+Efficiently account for all job-seeking operations without worrying about scrambled data.
 
-#Three types of people:
-    Graduates
-    Undergraduates
-    NonGraduates
+### 2. Word Cloud Comparison
 
-As for each of these has a leverage in order to peek a higher percentage for interviews and potential hires
+Compare a job listing with your current resume to visualize the connection between your skills and the job requirements.
 
-Graduates and Undergraduates can present education first
-else 
-Non graduates will present technical skills || experience (*Not literal as other components come first)
+### 3. Resume Template Operation
 
-............................................................................................................................................................................................Conclusion :: 
+Create multiple resume templates with a general purpose to accommodate diverse career opportunities.
 
-We will build a mock up to satisfy the anonymous users with basic react based library and some logic points 
+## Purpose
 
+The purpose of this software is to facilitate the creation of unique resumes for each job application. The solution addresses the need for efficient and quick application processes while ensuring tailored content for specific job requirements.
 
-After::REST API will be built for further authentication and storage, email sequences, ....
+## How It Works
 
+1. **Job Seek Accounting:** Keep track of all your job-seeking activities in one place to stay organized and focused.
 
-Technology :
-Remix 
+2. **Word Cloud Comparison:** Visualize the alignment between your skills and the requirements of a job through a word cloud comparison.
 
-Not worried about backend right now as the mock up is being built right now
+3. **Resume Template Operation:** Build and maintain multiple resume templates to cater to different career paths and job opportunities.
+
+## Why Choose Resume Generator?
+
+- **Efficiency:** Save time by quickly generating tailored resumes for each job application.
+- **Organization:** Keep your job-seeking efforts organized with a centralized system.
+- **Customization:** Create and manage multiple resume templates for diverse career paths.
+
+## Getting Started
+
+Follow these steps to get started with Resume Generator:
+
+1. Clone the repository.
+2. Install dependencies (if any).
+3. Run the application.
+4. Customize your resume templates and start applying for jobs.

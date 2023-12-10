@@ -1,8 +1,0 @@
-node_modules
-
-/.cache
-/build
-node_modules/
-/public/build
-.env
-./.eslintrc.js
