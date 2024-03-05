@@ -136,11 +136,5 @@ GitHub.sublime-settings
 #node
 node_modules/
 
-#node
-node_modules/
-
-#node
-node_modules/
-
-#node
-node_modules/
+#json data temp
+data/
