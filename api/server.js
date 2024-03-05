@@ -30,4 +30,18 @@ function generateUniqueId() {
   return `${Date.now()}-${Math.random().toString(36)}`;
 }
 
+server.post("/login", (req, res) => {
+  const { username, password } = req.body;
+  const userDbPath = path.join(__dirname, "..", "data", "users.json");
+  const users = JSON.parse(fs.readFileSync(userDbPath));
+  const user = users.find(
+    (user) => user.username === username && user.password === password,
+  );
+  console.log(user);
+  if (user) {
+    res.send({ message: "Login succesful" });
+  } else {
+    res.status(401).send({ message: "Invalid username or password" });
+  }
+});
 module.exports = server;
