@@ -2,16 +2,27 @@
 
 body {
   font-family: "Inter", Arial, "sans-serif";
+  background-color: #eee;
 }
 
 header {
-  border: 7px #121212 solid;
-  padding: 12px;
+  border: 1px #fff solid;
+  display: flex;
+  justify-content: space-around;
+}
+header ol {
+  display: flex;
+  gap: 12px;
+}
+header ol li {
+  text-decoration: none;
+  list-style: none;
 }
 
 #main {
   border: 7px #121212 solid;
   padding: 12px;
+  height: 100%;
 }
 
 footer {
