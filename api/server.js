@@ -6,3 +6,5 @@ server.use(express.json());
 server.get("/", (req, res) => {
   res.send(`<h1>RG</h1>`);
 });
+
+module.exports = server;
