@@ -44,4 +44,23 @@ server.post("/login", (req, res) => {
     res.status(401).send({ message: "Invalid username or password" });
   }
 });
+
+const resumesDbPath = path.join(__dirname, "..", "data", "resumes.json");
+if (!fs.existsSync(resumesDbPath)) {
+  fs.writeFileSync(resumesDbPath, JSON.stringify([], "utf8"));
+}
+function generateUniqueId() {
+  return `${Date.now()}-${Math.random().toString(36)}`;
+}
+server.post("/create-resume", (req, res) => {
+  const resumesData = JSON.parse(fs.readFileSync(resumesDbPath, null, 2));
+  const newResume = {
+    id: generateUniqueId(),
+    data: {},
+  };
+  resumesData.push(newResume);
+  fs.writeFileSync(resumesDbPath, JSON.stringify(resumesData, null, 2));
+  res.status(201).send({ resumeKey: newResume.id });
+});
+
 module.exports = server;
