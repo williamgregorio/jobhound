@@ -2,11 +2,12 @@ const express = require("express");
 const server = express();
 const path = require("path");
 const fs = require("fs");
-
-server.use(express.static("public"));
+server.use(express.json());
 
 server.use(express.static(path.join(__dirname, "..", "public")));
-server.use(express.json());
+server.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "..", "public", "index.html"));
+});
 
 server.post("/register", (req, res) => {
   const { username, password } = req.body;
@@ -37,9 +38,8 @@ server.post("/login", (req, res) => {
   const user = users.find(
     (user) => user.username === username && user.password === password,
   );
-  console.log(user);
   if (user) {
-    res.send({ message: "Login succesful" });
+    res.send({ message: "Login succesful", authenticated: true });
   } else {
     res.status(401).send({ message: "Invalid username or password" });
   }
