@@ -5,10 +5,28 @@ const fs = require("fs");
 server.use(express.json());
 
 server.use(express.static(path.join(__dirname, "..", "public")));
-server.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "..", "public", "index.html"));
-});
+const resumesDbPath = path.join(__dirname, "..", "data", "resumes.json");
 
+function initializeResumesDb() {
+  try {
+    if (!fs.existsSync(resumesDbPath)) {
+      fs.writeFileSync(resumesDbPath, JSON.stringify([], null, 2), "utf8");
+      console.log("resumes.json created");
+    }
+  } catch (error) {
+    console.error("Network error: ", error);
+  }
+}
+initializeResumesDb();
+server.get("/resumes", (req, res) => {
+  try {
+    const resumes = JSON.parse(fs.readFileSync(resumesDbPath, "utf8"));
+    console.log(res.json(resumes));
+    res.json(resumes);
+  } catch (error) {
+    res.status(500).send("Internal server error", error);
+  }
+});
 server.post("/register", (req, res) => {
   const { username, password } = req.body;
   if (!username && !password) {
@@ -45,13 +63,10 @@ server.post("/login", (req, res) => {
   }
 });
 
-const resumesDbPath = path.join(__dirname, "..", "data", "resumes.json");
-if (!fs.existsSync(resumesDbPath)) {
-  fs.writeFileSync(resumesDbPath, JSON.stringify([], "utf8"));
-}
 function generateUniqueId() {
   return `${Date.now()}-${Math.random().toString(36)}`;
 }
+
 server.post("/create-resume", (req, res) => {
   const resumesData = JSON.parse(fs.readFileSync(resumesDbPath, null, 2));
   const newResume = {
@@ -63,4 +78,47 @@ server.post("/create-resume", (req, res) => {
   res.status(201).send({ resumeKey: newResume.id });
 });
 
+server.put("/resumes/:resumeId", (req, res) => {
+  const { resumeId } = req.params;
+  const updatedData = req.body;
+  try {
+    const resumeData = JSON.parse(fs.readFileSync(resumesDbPath, "utf8"));
+    const resumeIndex = resumeData.findIndex(
+      (resume) => resume.id === resumeId,
+    );
+    if (resumeIndex === -1) {
+      return res.status(404).send("Resume not found");
+    }
+    resumeData[resumeIndex].data = updatedData;
+    fs.writeFileSync(
+      resumesDbPath,
+      JSON.stringify(resumeData, null, 2),
+      "utf8",
+    );
+    res.send({ message: "Resume updated successfully" });
+  } catch (error) {
+    console.error("Failed to update: ", error);
+    res.status(500).send("Internal server error");
+  }
+});
+
+server.get("/resumes/:resumeId", (req, res) => {
+  const { resumeId } = req.params;
+  try {
+    const resumesData = JSON.parse(fs.readFileSync(resumesDbPath, "utf8"));
+    const resume = resumesData.find((r) => r.id === resumeId);
+    if (resume) {
+      res.json(resume);
+    } else {
+      res.status(404).send("Resume not found");
+    }
+  } catch (error) {
+    console.error("Failed to get resume: ", error);
+    res.status(500).send("Internal server error");
+  }
+});
+
+server.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "..", "public", "index.html"));
+});
 module.exports = server;
