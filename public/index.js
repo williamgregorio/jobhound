@@ -55,7 +55,6 @@ document.addEventListener("DOMContentLoaded", function () {
   function createHeader() {
     const header = document.createElement("header");
     const logo = createLogo();
-    console.log(logo);
     header.append(logo);
     body.append(header);
     return header;
@@ -80,6 +79,12 @@ document.addEventListener("DOMContentLoaded", function () {
     const main = document.querySelector("main") || createMain();
     main.innerHTML = "";
 
+    const hash = window.location.hash;
+    if (hash.startsWith("#edit-resume/")) {
+      const resumeId = hash.split("/")[1];
+      console.log(resumeId);
+      renderEditForm(resumeId);
+    }
     if (window.location.hash === "#dashboard" && !isUserAuthenticated()) {
       window.location.hash = "#login";
       return;
@@ -100,16 +105,39 @@ document.addEventListener("DOMContentLoaded", function () {
         main.append(createDashboard());
         break;
       default:
-        main.innerHTML = `${frontPage()}`;
+        main.innerHTML = frontPage();
     }
   }
 
+  async function renderEditForm(resumeId) {
+    try {
+      const response = await fetch(`/resumes/${resumeId}`);
+      if (response.ok) {
+        const resumeData = await response.json();
+        const editForm = createEditForm(resumeData);
+        document.querySelector("main").append(editForm);
+      } else {
+        console.error("Failed to fetch resume details");
+      }
+    } catch (error) {
+      console.error("Network error: ", error);
+    }
+  }
+
+  function createEditForm(resumeData) {
+    const form = document.createElement("form");
+    const inputTitle = document.createElement("input");
+    inputTitle.value = resumeData.title;
+    form.append(inputTitle);
+    console.log(form);
+    return form;
+  }
   async function createResume() {
     try {
       const response = await fetch("/create-resume", {
         method: "POST",
         headers: {
-          "Content-Type": "appliction/json",
+          "Content-Type": "application/json",
         },
       });
       if (response.ok) {
@@ -147,7 +175,6 @@ document.addEventListener("DOMContentLoaded", function () {
     heroRightContent.innerHTML = heroImage;
     heroRightContent.setAttribute("id", "heroRight");
     hero.append(heroLeftContent, heroRightContent);
-    console.log(hero);
     return hero;
   }
   function frontPage() {
@@ -249,7 +276,6 @@ document.addEventListener("DOMContentLoaded", function () {
       });
       if (response.ok) {
         const responseBody = await response.json();
-        console.log(responseBody);
         localStorage.setItem("userAuthenticated", true);
         window.location.hash = "#dashboard";
         window.location.reload();
@@ -291,16 +317,60 @@ document.addEventListener("DOMContentLoaded", function () {
   function createDashboard() {
     const section = document.createElement("section");
     const dashboardHeader = createDashboardHeader();
-    console.log(dashboardHeader);
+
+    fetchAndDisplayResumes();
     section.append(dashboardHeader);
     return section;
   }
+  function createButton(name) {
+    const button = document.createElement("button");
+    button.textContent = name;
+    return button;
+  }
+
   function createDashboardHeader() {
     const header = document.createElement("div");
+    const resumeButton = new createButton("Create resume");
+    resumeButton.addEventListener("click", createResume);
     header.setAttribute("class", "dashboard-header");
+    header.append(resumeButton);
     return header;
   }
 
+  async function fetchAndDisplayResumes() {
+    try {
+      const response = await fetch("/resumes");
+      const resumes = await response.json();
+      const resumesTableContainer = document.createElement("div");
+      resumesTableContainer.setAttribute("id", "resumesTableContainer");
+      const table = document.createElement("table");
+      const thead = document.createElement("thead");
+      const tbody = document.createElement("tbody");
+
+      thead.innerHTML = `
+<tr>
+  <th>Title</th>
+  <th>Location</th>
+  <th>Edit</th>
+</tr>
+`;
+      resumes.forEach((resume) => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+<td>title</td>
+<td>location</td>
+<td><a href="#edit-resume/${resume.id}">Edit</a></td>
+`;
+        tbody.append(tr);
+      });
+
+      table.append(thead, tbody);
+      resumesTableContainer.append(table);
+      document.querySelector("section").append(resumesTableContainer);
+    } catch (error) {
+      console.error("Network error: ", error);
+    }
+  }
   function createFooter() {
     const footer = document.createElement("footer");
     body.append(footer);
