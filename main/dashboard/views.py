@@ -12,6 +12,7 @@ def dashboard_home(request):
     }
     return render(request, 'dashboard/index.html', context)
 
+@login_required
 def dashboard_create_job_entry(request):
     if request.method == 'POST':
         company_name = request.POST['company_name']
@@ -27,6 +28,7 @@ def dashboard_create_job_entry(request):
         return redirect('dashboard:dashboard_job_entries')
     return render(request, 'dashboard/create_job_entry.html')
 
+@login_required
 def dashboard_job_entries(request):
     job_entries = JobEntry.objects.filter(user=request.user)
     return render(request, 'dashboard/job_entries.html', {'job_entries': job_entries})
