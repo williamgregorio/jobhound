@@ -1,0 +1,47 @@
+{% extends 'dashboard/base.html' %}
+{% block title %}Resume templates{% endblock %}
+
+{% block content %}
+ <style>
+        /* Add CSS for table styling if needed */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+<h2>All resume templates</h2>
+<table>
+        <thead>
+            <tr>
+                <th>Template Name</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>City</th>
+                <th>State</th>
+                <th>Email</th>
+                <th>Phone Number</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for resume_template in resume_templates %}
+            <tr>
+                <td><a href="{% url 'dashboard:dashboard_resume_template_detail' resume_template.id %}">{{ resume_template.template_name }}</a></td>
+                <td>{{ resume_template.first_name }}</td>
+                <td>{{ resume_template.last_name }}</td>
+                <td>{{ resume_template.city }}</td>
+                <td>{{ resume_template.state }}</td>
+                <td>{{ resume_template.email }}</td>
+                <td>{{ resume_template.phone_number }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock%}
