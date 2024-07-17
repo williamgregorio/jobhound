@@ -5,24 +5,28 @@ from django.contrib.auth.models import User
 def home(request):
     return render(request, 'accounts/index.html')
 
-def signup(request):
+def signup_view(request):
     if request.method == 'POST':
         username = request.POST['username']
         password = request.POST['password']
-
         user = User.objects.create_user(username=username, password=password)
         user.save()
+        if user is not None:
+            login(request, user)
+            return redirect('account:home')
+        else:
+            return render(request, 'accounts/signup.html', {'error': 'Username already exist.'})
         return redirect('accounts:home')
     return render(request, 'accounts/signup.html')
 
-def login(request):
+def login_view(request):
     if request.method == 'POST':
         username = request.POST['username']
         password = request.POST['password']
-
         user = authenticate(request, username=username, password=password)
-
         if user is not None:
             login(request, user)
-            return redirect("accounts:home")
+            return redirect('accounts:home')
+        else:
+            return render(request, 'accounts/login.html', {'error': 'Invalid username or password.'})
     return render(request, 'accounts/login.html')
