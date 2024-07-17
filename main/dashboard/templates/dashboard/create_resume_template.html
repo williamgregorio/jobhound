@@ -1,0 +1,138 @@
+{% extends 'dashboard/base.html' %}
+{% block title %}Create a resume template{% endblock %}
+{% block content %} 
+<h2>Create a resume template</h2>
+{% if message %}
+  <p>{{ message }}</p>
+{% endif %}
+<form method="POST">
+    {% csrf_token %}
+  <!-- Resume Template Setup -->
+    <label for="template_name">Template Name:</label>
+    <input type="text" id="template_name" name="template_name" required>
+    <br>
+    <label for="first_name">First Name:</label>
+    <input type="text" id="first_name" name="first_name" required>
+    <br>
+    <label for="last_name">Last Name:</label>
+    <input type="text" id="last_name" name="last_name" required>
+    <br>
+    <label for="city">City:</label>
+    <input type="text" id="city" name="city" required>
+    <br>
+    <label for="state">State:</label>
+    <input type="text" id="state" name="state" required>
+    <br>
+    <label for="email">Email:</label>
+    <input type="email" id="email" name="email" required>
+    <br>
+    <label for="phone_number">Phone Number:</label>
+    <input type="text" id="phone_number" name="phone_number" required>
+    <br><br>
+    
+    <!-- Work Experiences -->
+    <fieldset>
+        <legend>Work Experiences</legend>
+        <div id="work_experience_fields">
+            <div class="work_experience">
+                <label for="company_name_1">Company Name:</label>
+                <input type="text" id="company_name_1" name="company_name_1" required>
+                <br>
+                <label for="job_title_1">Job Title:</label>
+                <input type="text" id="job_title_1" name="job_title_1" required>
+                <br>
+                <label for="city_1">City:</label>
+                <input type="text" id="city_1" name="city_1" required>
+                <br>
+                <label for="state_1">State:</label>
+                <input type="text" id="state_1" name="state_1" required>
+                <br>
+                <label for="start_date_1">Start Date:</label>
+                <input type="date" id="start_date_1" name="start_date_1" required>
+                <br>
+                <label for="end_date_1">End Date (leave blank if currently working):</label>
+                <input type="date" id="end_date_1" name="end_date_1">
+                <br>
+                <label for="currently_working_1">Currently Working:</label>
+                <input type="checkbox" id="currently_working_1" name="currently_working_1" value="False">
+                <br>
+                
+                <!-- Bullet Points for Work Experience 1 -->
+                <fieldset>
+                    <legend>Bullet Points</legend>
+                    <div id="bullet_points_1">
+                        <div class="bullet_point">
+                            <label for="bullet_point_1_1">Bullet Point:</label>
+                            <textarea id="bullet_point_1_1" name="bullet_point_1_1" rows="2" cols="50"></textarea>
+                            <br>
+                        </div>
+                    </div>
+                    <button type="button" onclick="addBulletPoint(1)">Add Bullet Point</button>
+                </fieldset>
+            </div>
+        </div>
+        <button type="button" onclick="addWorkExperience()">Add Work Experience</button>
+    </fieldset>
+    <br>
+    <button type="submit">Save Resume Template</button>
+</form>
+
+<script>
+    let workExperienceCount = 1;
+
+    function addWorkExperience() {
+        workExperienceCount++;
+        const newWorkExperience = `
+            <div class="work_experience">
+                <label for="company_name_${workExperienceCount}">Company Name:</label>
+                <input type="text" id="company_name_${workExperienceCount}" name="company_name_${workExperienceCount}" required>
+                <br>
+                <label for="job_title_${workExperienceCount}">Job Title:</label>
+                <input type="text" id="job_title_${workExperienceCount}" name="job_title_${workExperienceCount}" required>
+                <br>
+                <label for="city_${workExperienceCount}">City:</label>
+                <input type="text" id="city_${workExperienceCount}" name="city_${workExperienceCount}" required>
+                <br>
+                <label for="state_${workExperienceCount}">State:</label>
+                <input type="text" id="state_${workExperienceCount}" name="state_${workExperienceCount}" required>
+                <br>
+                <label for="start_date_${workExperienceCount}">Start Date:</label>
+                <input type="date" id="start_date_${workExperienceCount}" name="start_date_${workExperienceCount}" required>
+                <br>
+                <label for="end_date_${workExperienceCount}">End Date (leave blank if currently working):</label>
+                <input type="date" id="end_date_${workExperienceCount}" name="end_date_${workExperienceCount}">
+                <br>
+                <label for="currently_working_${workExperienceCount}">Currently Working:</label>
+                <input type="checkbox" id="currently_working_${workExperienceCount}" name="currently_working_${workExperienceCount} value="False" ">
+                <br>
+                
+                <!-- Bullet Points for Work Experience ${workExperienceCount} -->
+                <fieldset>
+                    <legend>Bullet Points</legend>
+                    <div id="bullet_points_${workExperienceCount}">
+                        <div class="bullet_point">
+                            <label for="bullet_point_${workExperienceCount}_1">Bullet Point:</label>
+                            <textarea id="bullet_point_${workExperienceCount}_1" name="bullet_point_${workExperienceCount}_1" rows="2" cols="50"></textarea>
+                            <br>
+                        </div>
+                    </div>
+                    <button type="button" onclick="addBulletPoint(${workExperienceCount})">Add Bullet Point</button>
+                </fieldset>
+            </div>
+        `;
+        document.getElementById('work_experience_fields').innerHTML += newWorkExperience;
+    }
+
+    function addBulletPoint(workExperienceNumber) {
+        const bulletPointCount = document.getElementById(`bullet_points_${workExperienceNumber}`).getElementsByTagName('textarea').length + 1;
+        const newBulletPoint = `
+            <div class="bullet_point">
+                <label for="bullet_point_${workExperienceNumber}_${bulletPointCount}">Bullet Point:</label>
+                <textarea id="bullet_point_${workExperienceNumber}_${bulletPointCount}" name="bullet_point_${workExperienceNumber}_${bulletPointCount}" rows="2" cols="50"></textarea>
+                <br>
+            </div>
+        `;
+        document.getElementById(`bullet_points_${workExperienceNumber}`).innerHTML += newBulletPoint;
+    }
+</script>
+{% endblock %}
