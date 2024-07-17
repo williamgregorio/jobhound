@@ -6,6 +6,9 @@ def home(request):
     return render(request, 'accounts/index.html')
 
 def signup_view(request):
+    if request.user.is_authenticated:
+        return redirect('dashboard:dashboard_home')
+
     if request.method == 'POST':
         username = request.POST['username']
         password = request.POST['password']
@@ -13,20 +16,23 @@ def signup_view(request):
         user.save()
         if user is not None:
             login(request, user)
-            return redirect('account:home')
+            return redirect('dashboard:dashboard_home')
         else:
             return render(request, 'accounts/signup.html', {'error': 'Username already exist.'})
         return redirect('accounts:home')
     return render(request, 'accounts/signup.html')
 
 def login_view(request):
+    if request.user.is_authenticated:
+        return redirect('dashboard:dashboard_home')
+
     if request.method == 'POST':
         username = request.POST['username']
         password = request.POST['password']
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            return redirect('accounts:home')
+            return redirect('dashboard:dashboard_home')
         else:
             return render(request, 'accounts/login.html', {'error': 'Invalid username or password.'})
     return render(request, 'accounts/login.html')
