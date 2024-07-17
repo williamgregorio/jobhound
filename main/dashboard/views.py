@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 from .models import JobEntry, ResumeTemplate, ResumeTemplateWorkExperience, ResumeTemplateWorkExperienceBulletPoint
 from datetime import datetime
+from django.utils.dateparse import parse_date
 
 @login_required(login_url='accounts:login')
 def dashboard_home(request):
@@ -17,12 +18,14 @@ def dashboard_home(request):
 def dashboard_create_job_entry(request):
     if request.method == 'POST':
         company_name = request.POST['company_name']
+        job_name = request.POST['job_name']
         job_post_url = request.POST['job_post_url']
         applied_str = request.POST.get('applied', 'False')
         applied = (applied_str == 'True')
         job_entry = JobEntry.objects.create(
             user=request.user,
             company_name=company_name,
+            job_name=job_name,
             job_post_url=job_post_url,
             applied=applied
         )
@@ -93,7 +96,7 @@ def dashboard_create_resume_template(request):
 
             work_experience_count += 1
 
-        return redirect('dashboard:dashboard_home')
+        return redirect('dashboard:dashboard_resume_templates')
     return render(request, 'dashboard/create_resume_template.html')
 
 @login_required
@@ -115,6 +118,64 @@ def dashboard_resume_template_detail(request, resume_template_id):
     }
 
     return render(request, 'dashboard/resume_template_detail.html', context)
+
+@login_required
+def dashboard_resume_template_detail_edit(request, resume_template_id):
+    resume_template = get_object_or_404(ResumeTemplate, pk=resume_template_id)
+    if request.method == 'POST':
+        resume_template.template_name = request.POST.get('template_name', resume_template.template_name)
+        resume_template.first_name = request.POST.get('first_name', resume_template.first_name)
+        resume_template.last_name = request.POST.get('last_name', resume_template.last_name)
+        resume_template.city = request.POST.get('city', resume_template.city)
+        resume_template.state = request.POST.get('state', resume_template.state)
+        resume_template.email = request.POST.get('email', resume_template.email)
+        resume_template.phone_number = request.POST.get('phone_number', resume_template.phone_number)
+        resume_template.save()
+
+        work_experiences = resume_template.work_experiences.all()
+        print(work_experiences[0])
+        for work_experience in work_experiences:
+            form_prefix = f'work_experience_{work_experience.id}'
+            work_experience.company_name = request.POST.get(f'{form_prefix}_company_name', work_experience.company_name)
+            work_experience.job_title = request.POST.get(f'{form_prefix}_job_title', work_experience.job_title)
+            work_experience.city = request.POST.get(f'{form_prefix}_city', work_experience.city)
+            work_experience.state = request.POST.get(f'{form_prefix}_state', work_experience.state)
+
+            start_date_str = request.POST.get(f'{form_prefix}_start_date', '')
+            if start_date_str:
+                start_date = parse_date(start_date_str)
+                if start_date:
+                    work_experience.start_date = start_date
+                else:
+                    return render(request, 'dashboard/resume_template_detail.html', {
+                        'resume_template': resume_template,
+                        'work_experiences': work_experiences,
+                        'message': 'Invalid start date format. Please use YYYY-MM-DD.'
+                    })
+
+            end_date_str = request.POST.get(f'{form_prefix}_end_date', '')
+            if end_date_str:
+                end_date = parse_date(end_date_str)
+                if end_date:
+                    work_experience.end_date = end_date
+                else:
+                    return render(request, 'dashboard/resume_template_detail.html', {
+                        'resume_template': resume_template,
+                        'work_experiences': work_experiences,
+                        'message': 'Invalid end date format. Please use YYYY-MM-DD.'
+                    })
+
+            work_experience.currently_working = request.POST.get(f'{form_prefix}_currently_working', False) == 'on'
+            work_experience.save()
+
+        return redirect('dashboard:dashboard_resume_template_detail_edit', resume_template_id=resume_template.id)
+
+    context = {
+        'resume_template': resume_template,
+        'work_experiences': work_experiences
+    }
+    return render(request, 'dashboard/resume_template_detail.html', context)
+    
 
 def dashboard_logout(request):
     logout(request)

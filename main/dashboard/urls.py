@@ -9,5 +9,6 @@ urlpatterns = [
     path('create-resume-template/', views.dashboard_create_resume_template, name='dashboard_create_resume_template'),
     path('resume-templates/', views.dashboard_resume_templates, name='dashboard_resume_templates'),
     path('resume-template/<int:resume_template_id>/', views.dashboard_resume_template_detail, name='dashboard_resume_template_detail'),
+    path('resume-template/<int:resume_template_id>/edit/', views.dashboard_resume_template_detail_edit, name='dashboard_resume_template_detail_edit'),
     path('logout/', views.dashboard_logout, name='dashboard_logout')
 ]

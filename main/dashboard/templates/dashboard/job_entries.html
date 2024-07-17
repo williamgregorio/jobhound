@@ -22,6 +22,7 @@
     <thead>
         <tr>
             <th>Company Name</th>
+            <th>Job Name</th>
             <th>Job Post URL</th>
             <th>Date Created</th>
             <th>Applied</th>
@@ -31,6 +32,7 @@
         {% for job_entry in job_entries %}
         <tr>
             <td>{{ job_entry.company_name }}</td>
+            <td>{{ job_entry.job_name }}</td>
             <td><a href="{{ job_entry.job_post_url }}" target="_blank">{{ job_entry.job_post_url }}</a></td>
             <td>{{ job_entry.date_created }}</td>
             <td>{% if job_entry.applied %}Yes{% else %}No{% endif %}</td>

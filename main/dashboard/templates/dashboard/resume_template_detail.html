@@ -1,8 +1,8 @@
 {% extends 'dashboard/base.html' %}
 {% block title %}{{ resume_template.template_name }}{% endblock %}
-
 {% block content %}
 <h2>Resume template</h2>
+<div id="resumeStaticContent">
     <h1>{{ resume_template.template_name }}</h1>
     <p>First Name: {{ resume_template.first_name }}</p>
     <p>Last Name: {{ resume_template.last_name }}</p>
@@ -10,30 +10,116 @@
     <p>State: {{ resume_template.state }}</p>
     <p>Email: {{ resume_template.email }}</p>
     <p>Phone Number: {{ resume_template.phone_number }}</p>
-<h2>Work Experiences</h2>
-    {% if work_experiences %}
-    <ul>
+  <h2> Work Experiences</h2>
+  {% for work_experiences in work_experience %}
+  <li>
+    <strong>{{ work_experience.company_name }} - {{ work_experience.job_title }}</strong><br>
+  </li>
+  {% endfor %}
+
+    <a href="#" id="editResumeButton">Edit Resume Template</a>
+</div>
+
+<form id="editResumeForm" method="POST" action="{% url 'dashboard:dashboard_resume_template_detail_edit' resume_template.id %}" style="display: none;">
+    {% csrf_token %}
+    <label for="template_name">Template Name:</label>
+    <input type="text" name="template_name" value="{{ resume_template.template_name }}"><br>
+    <label for="first_name">First Name:</label>
+    <input type="text" name="first_name" value="{{ resume_template.first_name }}"><br>
+    <label for="last_name">Last Name:</label>
+    <input type="text" name="last_name" value="{{ resume_template.last_name }}"><br>
+    <label for="city">City:</label>
+    <input type="text" name="city" value="{{ resume_template.city }}"><br>
+    <label for="state">State:</label>
+    <input type="text" name="state" value="{{ resume_template.state }}"><br>
+    <label for="email">Email:</label>
+    <input type="email" name="email" value="{{ resume_template.email }}"><br>
+    <label for="phone_number">Phone Number:</label>
+    <input type="tel" name="phone_number" value="{{ resume_template.phone_number }}"><br>
+    
+    <!-- Work Experiences -->
+    <h2>Work Experiences</h2>
+    <ul id="workExperiences">
         {% for work_experience in work_experiences %}
         <li>
-            <strong>{{ work_experience.company_name }} - {{ work_experience.job_title }}</strong><br>
-            Location: {{ work_experience.city }}, {{ work_experience.state }}<br>
-            Start Date: {{ work_experience.start_date }}<br>
-            {% if work_experience.currently_working %}
-            End Date: Present<br>
-            {% else %}
-            End Date: {{ work_experience.end_date }}<br>
-            {% endif %}
-            Description:
-            <ul>
-                {% for bullet_point in work_experience.bullet_points.all %}
-                <li>{{ bullet_point.content }}</li>
-                {% endfor %}
-            </ul>
+            <div id="staticWorkContent_{{ work_experience.id }}">
+                <strong>{{ work_experience.company_name }} - {{ work_experience.job_title }}</strong><br>
+                Location: {{ work_experience.city }}, {{ work_experience.state }}<br>
+                Start Date: {{ work_experience.start_date }}<br>
+                {% if work_experience.currently_working %}
+                End Date: Present<br>
+                {% else %}
+                End Date: {{ work_experience.end_date }}<br>
+                {% endif %}
+                <a href="#" class="editWorkExperienceLink" data-id="{{ work_experience.id }}">Edit</a>
+            </div>
         </li>
-        {% endfor %}
+            <div id="editWorkForm_{{ work_experience.id }}" style="display: none;">
+                <input type="text" name="work_experience_{{ work_experience.id }}_company_name"
+                    value="{{ work_experience.company_name }}"><br>
+                <input type="text" name="work_experience_{{ work_experience.id }}_job_title"
+                    value="{{ work_experience.job_title }}"><br>
+                <input type="text" name="work_experience_{{ work_experience.id }}_city"
+                    value="{{ work_experience.city }}"><br>
+                <input type="text" name="work_experience_{{ work_experience.id }}_state"
+                    value="{{ work_experience.state }}"><br>
+                <input type="date" name="work_experience_{{ work_experience.id }}_start_date"
+                    value="{{ work_experience.start_date }}"><br>
+                <input type="date" name="work_experience_{{ work_experience.id }}_end_date"
+                    value="{{ work_experience.end_date }}"><br>
+                <input type="checkbox" name="work_experience_{{ work_experience.id }}_currently_working"
+                    {% if work_experience.currently_working %}checked{% endif %}> Currently Working<br>
+                <a href="#" class="cancelWorkExperienceLink" data-id="{{ work_experience.id }}">Cancel</a>
+            </div>
+    {% endfor %}
     </ul>
-    {% else %}
-    <p>No work experiences found for this template.</p>
-    {% endif %}
-    <a href="{% url 'dashboard:dashboard_resume_templates' %}">Back to Resume Templates</a>
+    <button type="submit">Save Changes</button>
+    <button type="button" id="cancelResumeButton">Cancel</button>
+</form>
+
+<a href="{% url 'dashboard:dashboard_resume_templates' %}">Back to Resume Templates</a>
+
+<script>
+    document.getElementById('editResumeButton').addEventListener('click', function (event) {
+        event.preventDefault();
+        document.getElementById('resumeStaticContent').style.display = 'none';
+        document.getElementById('editResumeForm').style.display = 'block';
+    });
+
+    document.getElementById('cancelResumeButton').addEventListener('click', function (event) {
+        event.preventDefault();
+        document.getElementById('editResumeForm').style.display = 'none';
+        document.getElementById('resumeStaticContent').style.display = 'block';
+        
+        // Hide all edit forms for work experiences and show static content
+        document.querySelectorAll('[id^=editWorkForm_]').forEach(form => {
+            form.style.display = 'none';
+        });
+
+        document.querySelectorAll('[id^=staticWorkContent_]').forEach(content => {
+            content.style.display = 'block';
+        });
+    });
+
+    document.querySelectorAll('.editWorkExperienceLink').forEach(link => {
+        link.addEventListener('click', function (event) {
+            event.preventDefault();
+            const workExperienceId = this.getAttribute('data-id');
+            
+            document.getElementById(`staticWorkContent_${workExperienceId}`).style.display = 'none';
+            document.getElementById(`editWorkForm_${workExperienceId}`).style.display = 'block';
+        });
+    });
+
+    document.querySelectorAll('.cancelWorkExperienceLink').forEach(link => {
+        link.addEventListener('click', function (event) {
+            event.preventDefault();
+            const workExperienceId = this.getAttribute('data-id');
+            
+            // Show static content and hide edit form for the selected work experience
+            document.getElementById(`editWorkForm_${workExperienceId}`).style.display = 'block';
+            document.getElementById(`staticWorkContent_${workExperienceId}`).style.display = 'block';
+        });
+    });
+</script>
 {% endblock %}
