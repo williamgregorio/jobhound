@@ -4,5 +4,7 @@ from . import views
 app_name = 'dashboard'
 urlpatterns = [
     path('', views.dashboard_home, name='dashboard_home'),
+    path('create-job/', views.dashboard_create_job_entry, name='dashboard_create_job_entry'),
+    path('job-entries/', views.dashboard_job_entries, name='dashboard_job_entries'),
     path('logout/', views.dashboard_logout, name='dashboard_logout')
 ]
