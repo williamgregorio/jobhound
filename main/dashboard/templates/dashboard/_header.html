@@ -2,7 +2,14 @@
   <nav>
     <ul>
       <li><a href="{% url 'dashboard:dashboard_home' %}">Dashboard</a></li>
-      <li><a href="#">Create job</a></li>
+      <li>
+        <a href="{% url 'dashboard:dashboard_create_job_entry' %}"
+          >Create job</a
+        >
+      </li>
+      <li>
+        <a href="{% url 'dashboard:dashboard_job_entries' %}">Job entries</a>
+      </li>
       <li><a href="{% url 'dashboard:dashboard_logout' %}">Logout</a></li>
     </ul>
   </nav>
