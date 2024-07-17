@@ -1,0 +1,39 @@
+{% extends 'dashboard/base.html' %}
+{% block title %}{{ resume_template.template_name }}{% endblock %}
+
+{% block content %}
+<h2>Resume template</h2>
+    <h1>{{ resume_template.template_name }}</h1>
+    <p>First Name: {{ resume_template.first_name }}</p>
+    <p>Last Name: {{ resume_template.last_name }}</p>
+    <p>City: {{ resume_template.city }}</p>
+    <p>State: {{ resume_template.state }}</p>
+    <p>Email: {{ resume_template.email }}</p>
+    <p>Phone Number: {{ resume_template.phone_number }}</p>
+<h2>Work Experiences</h2>
+    {% if work_experiences %}
+    <ul>
+        {% for work_experience in work_experiences %}
+        <li>
+            <strong>{{ work_experience.company_name }} - {{ work_experience.job_title }}</strong><br>
+            Location: {{ work_experience.city }}, {{ work_experience.state }}<br>
+            Start Date: {{ work_experience.start_date }}<br>
+            {% if work_experience.currently_working %}
+            End Date: Present<br>
+            {% else %}
+            End Date: {{ work_experience.end_date }}<br>
+            {% endif %}
+            Description:
+            <ul>
+                {% for bullet_point in work_experience.bullet_points.all %}
+                <li>{{ bullet_point.content }}</li>
+                {% endfor %}
+            </ul>
+        </li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <p>No work experiences found for this template.</p>
+    {% endif %}
+    <a href="{% url 'dashboard:dashboard_resume_templates' %}">Back to Resume Templates</a>
+{% endblock %}
