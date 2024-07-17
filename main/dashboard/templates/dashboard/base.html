@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="{% static 'accounts/css/style.css' %}" />
   </head>
   <body>
+    {% include 'dashboard/_header.html' %}
     <main>{% block content %} {% endblock %}</main>
   </body>
 </html>
